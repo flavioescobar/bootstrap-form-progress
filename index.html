@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Form Progress Bar Using Twitter Bootstrap</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-1.12.0.min.js"></script>
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+
+    <style type="text/css">
+        .nav-tabs {
+            margin: 20px 0;
+        }
+        p {
+            margin-top: 20px;
+        }
+        .main-content {
+            padding-bottom: 90px;
+        }
+        .fixed-footer {
+            position: fixed;
+            bottom: 0;
+            background-color: #F5F5F5;
+            width: 100%;
+            height: 90px;
+        }
+    </style>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            function updateInputProgress() {
+                var filledFields = 0;
+                $('#input-progress').find('input, select').each(function() {
+                    if ($(this).val() != '') {
+                        filledFields++;
+                    }
+                });
+
+                var percent = Math.ceil(100 * filledFields / totalFields);
+                $('#progress-inputs .progress-bar')
+                        .attr('aria-valuenow', percent)
+                        .width(percent + '%')
+                        .find('.sr-only').html(percent + '% Complete');
+
+                return percent;
+            }
+
+            function updateFieldsetProgress() {
+                var filledFieldsets = 0;
+                $('#fieldset-progress fieldset').each(function() {
+                    var filledFields = 0;
+                    var totalFields = $(this).find('input, select').length;
+                    $(this).find('input, select').each(function() {
+                        if ($(this).val() != '') {
+                            filledFields++;
+                        }
+                    });
+
+                    if (filledFields == totalFields) {
+                        filledFieldsets++;
+                    }
+                });
+
+                var percent = Math.ceil(100 * filledFieldsets / totalFieldsets);
+                $('#progress-fieldsets .progress-bar')
+                        .attr('aria-valuenow', percent)
+                        .width(percent + '%')
+                        .find('.sr-only').html(percent + '% Complete');
+
+                return percent;
+            }
+
+            $('.nav-tabs a').click(function (e) {
+                e.preventDefault()
+                $(this).tab('show');
+
+                var progressID = $(this).attr('href').replace('#', '#progress-');
+                $('.progress').addClass('hidden');
+                $(progressID).removeClass('hidden');
+            });
+
+            // Input progress.
+            var totalFields = $('#input-progress').find('input, select').length;
+            $('#input-progress').find('input, select').blur(function() {
+                updateInputProgress();
+            });
+            $('#input-progress .btn-success').click(function() {
+                var percent = updateInputProgress();
+                if (percent == 100) {
+                    alert('Finished inputs successfully!');
+                }
+            });
+
+            // Fieldset progress.
+            var totalFieldsets = $('#fieldset-progress fieldset').length;
+            $('#fieldset-progress').find('input, select').blur(function() {
+                updateFieldsetProgress();
+            });
+            $('#fieldset-progress .btn-success').click(function() {
+                var percent = updateFieldsetProgress();
+                if (percent == 100) {
+                    alert('Finished fieldsets successfully!');
+                }
+            });
+        });
+    </script>
+</head>
+<body>
+<div class="container main-content">
+    <div class="row">
+        <div class="col-md-12">
+            <h1 class="page-header">Form Progress Bar Using Twitter Bootstrap</h1>
+        </div>
+        <div class="col-md-4 col-sm-6 col-xs-12">
+            <p>Choose what kind of progress do you want to measure:</p>
+            <ul class="nav nav-tabs">
+                <li role="presentation" class="active"><a href="#inputs">Inputs</a></li>
+                <li role="presentation"><a href="#fieldsets">Fieldsets</a></li>
+            </ul>
+            <div class="tab-content">
+                <div role="tabpanel" class="tab-pane active" id="inputs">
+                    <form id="input-progress" role="form">
+                        <div class="form-group">
+                            <label for="name">Name</label>
+                            <input type="text" id="name" name="name" class="form-control" />
+                        </div>
+                        <div class="form-group">
+                            <label for="age">Age</label>
+                            <input type="text" id="age" name="age" class="form-control" />
+                        </div>
+                        <div class="form-group">
+                            <label for="street">Street</label>
+                            <input type="text" id="street" name="street" class="form-control" />
+                        </div>
+                        <div class="form-group">
+                            <label for="city">City</label>
+                            <input type="text" id="city" name="city" class="form-control" />
+                        </div>
+                        <div class="form-group">
+                            <label for="state">State</label>
+                            <select id="state" name="state" class="form-control">
+                                <option value="">- Select -</option>
+                                <option value="ST1">First State</option>
+                                <option value="ST2">Second State</option>
+                                <option value="ST3">Third State</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <button type="button" class="btn btn-success">SEND</button>
+                        </div>
+                    </form>
+                </div>
+                <div role="tabpanel" class="tab-pane" id="fieldsets">
+                    <form id="fieldset-progress" role="form">
+                        <fieldset>
+                            <legend>Basic Info</legend>
+                            <div class="form-group">
+                                <label for="name2">Name</label>
+                                <input type="text" id="name2" name="name2" class="form-control" />
+                            </div>
+                            <div class="form-group">
+                                <label for="age2">Age</label>
+                                <input type="text" id="age2" name="age2" class="form-control" />
+                            </div>
+                        </fieldset>
+                        <fieldset>
+                            <legend>Residency</legend>
+                            <div class="form-group">
+                                <label for="street2">Street</label>
+                                <input type="text" id="street2" name="street2" class="form-control" />
+                            </div>
+                            <div class="form-group">
+                                <label for="city2">City</label>
+                                <input type="text" id="city2" name="city2" class="form-control" />
+                            </div>
+                            <div class="form-group">
+                                <label for="state2">State</label>
+                                <select id="state2" name="state2" class="form-control">
+                                    <option value="">- Select -</option>
+                                    <option value="ST1">First State</option>
+                                    <option value="ST2">Second State</option>
+                                    <option value="ST3">Third State</option>
+                                </select>
+                            </div>
+                        </fieldset>
+                        <fieldset>
+                            <legend>Education</legend>
+                            <div class="form-group">
+                                <label for="degree">Degree</label>
+                                <select id="degree" name="degree" class="form-control">
+                                    <option value="">- Select -</option>
+                                    <option value="ST1">Bachelor</option>
+                                    <option value="ST2">Master's</option>
+                                    <option value="ST3">Doctorate</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="field-of-study">Field of Study</label>
+                                <input type="text" id="field-of-study" name="field-of-study" class="form-control" />
+                            </div>
+                        </fieldset>
+                        <fieldset>
+                            <legend>Work</legend>
+                            <div class="form-group">
+                                <label for="occupation">Occupation</label>
+                                <input type="text" id="occupation" name="occupation" class="form-control" />
+                            </div>
+                            <div class="form-group">
+                                <label for="company">Company</label>
+                                <input type="text" id="company" name="company" class="form-control" />
+                            </div>
+                        </fieldset>
+                        <div class="form-group">
+                            <button type="button" class="btn btn-success">SEND</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="fixed-footer">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4 col-sm-6 col-xs-12">
+                <p><strong>Progress:</strong></p>
+                <div id="progress-inputs" class="progress">
+                    <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                        <span class="sr-only">0% Complete</span>
+                    </div>
+                </div>
+                <div id="progress-fieldsets" class="progress hidden">
+                    <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                        <span class="sr-only">0% Complete</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
